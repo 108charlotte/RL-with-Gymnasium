@@ -147,6 +147,11 @@ class BunnyAgent:
 
         # track learning progress
         self.training_error = []
+    
+    def Q(self, state, action=None): 
+        if action is None: 
+            return self.q_values[state]
+        return self.q_values[state][action]
 
     # for multiple q functions, this is what would be updated
     def get_action(self, obs): # randomly selects or uses q values, but becomes less random over time 
@@ -154,7 +159,7 @@ class BunnyAgent:
             return self.env.action_space.sample()
         else: 
             # estimates q values for current state and returns action to take (highest val)
-            return int(np.argmax(self.q_values[obs])) # would instead be q function to determine which q function to use
+            return int(np.argmax(self.Q(obs))) # would instead be q function to determine which q function to use
     
     def update(self, obs, action, reward, terminated, next_obs): 
         future_q_value = (not terminated) * np.max(self.q_values[next_obs])
